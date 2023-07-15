@@ -45,6 +45,47 @@ app.route("/articles")
     });
 });
 
+app.route("/articles/:articleTitle")
+.get((req, res) => {
+    Article.findOne({title: req.params.articleTitle})
+    .then((article) => {
+        res.send(article);
+    })
+    .catch((err) => {
+        res.send(err);
+    });
+})
+.put((req, res) => {
+    Article.replaceOne(
+        {title: req.params.articleTitle},
+        {title: req.body.title, content: req.body.content}
+    )
+    .then(() => {
+        res.send("Successfully updated an article");
+    }).catch((err) => {
+        res.send(err);
+    })
+})
+.patch((req, res) => {
+    Article.updateOne(
+        {title: req.params.articleTitle},
+        req.body
+    )
+    .then(() => {
+        res.send("Successfully updated an article");
+    }).catch((err) => {
+        res.send(err);
+    });
+})
+.delete((req, res) => {
+    Article.deleteOne({title: req.params.articleTitle})
+    .then(() => {
+        res.send("Successfully deleted an article");
+    }).catch((err) => {
+        res.send(err);
+    });
+});
+
 app.listen(3000, () => {
     console.log("Server is started on port 3000");
 });
